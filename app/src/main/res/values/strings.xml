@@ -1,3 +1,15 @@
 <resources>
     <string name="app_name">PalSuggest</string>
+    
+    <string-array name="ProductTags">
+        <item>Desktop PC</item>
+        <item>Laptop</item>
+        <item>TV</item>
+        <item>Monitor</item>
+        <item>Keyboard</item>
+        <item>Mouse</item>
+        <item>Headset/Headphone</item>
+        <item>Microphone</item>
+        <item>Speaker</item>
+    </string-array>
 </resources>
