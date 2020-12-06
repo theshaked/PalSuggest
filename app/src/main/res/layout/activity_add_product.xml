@@ -84,8 +84,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="10dp"
-            android:background="@drawable/edit_text_background"
             android:fontFamily="sans-serif-condensed"
+            android:background="@drawable/bg_dropdown"
             android:hint="קטגורית המוצר"
             android:inputType="text|textCapSentences"
             android:padding="10dp" />
