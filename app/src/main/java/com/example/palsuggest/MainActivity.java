@@ -17,6 +17,11 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        setupFloatingActBtnAddProd();
+    }
+
+    public void setupFloatingActBtnAddProd()
+    {
         FloatingActionButton floatingActBtnAddProd = findViewById(R.id.addProdFloatingActionButton);
         floatingActBtnAddProd.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -25,8 +30,6 @@ public class MainActivity extends AppCompatActivity {
                 openActivity(activity_add_product.class);
             }
         });
-
-
     }
 
     private void openActivity(Class activityClass)
