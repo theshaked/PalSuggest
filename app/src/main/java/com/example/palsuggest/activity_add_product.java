@@ -10,27 +10,63 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Spinner;
+import android.widget.Toast;
 
 public class activity_add_product extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
 
-    ImageView uploadImageView;
     private static final int PICK_IMAGE = 100;
+    ImageView uploadImageView;
     Uri imageUri;
+    EditText prodName;
+    EditText prodReview;
+    Spinner spinnerTags;
+    EditText prodPrice;
+    EditText prodLink;
+    Button addNewProdBtn;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_product);
 
-        setupSpinnerTags();
+        prodName=findViewById(R.id.prodName);
+        prodReview=findViewById(R.id.prodReview);
+        spinnerTags =findViewById(R.id.prodTag);
+        prodPrice=findViewById(R.id.prodPrice);
+        prodLink=findViewById(R.id.prodLink);
+        addNewProdBtn=findViewById(R.id.addNewProdBtn);
 
+        setupSpinnerTags();
         setupuploadImageView();
+        setupAddNewProdBtn();
+    }
+
+    private void setupAddNewProdBtn() {
+        addNewProdBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                prodName.requestFocus();
+                prodName.setError("Your Error Message");
+
+                String dataText="prodName="+prodName.getText()+"\n"+
+                        "prodReview="+prodReview.getText()+"\n"+
+                        "spinnerTags="+spinnerTags.getSelectedItem().toString()+"\n"+
+                        "prodPrice="+prodPrice.getText()+"\n"+
+                        "prodLink="+prodLink.getText()+"\n"+
+                        "imageUri="+imageUri.getPath()+"\n";
+
+                Toast.makeText(getApplicationContext(), dataText, Toast.LENGTH_LONG).show(); //TODO: del this toast
+                //openActivity(activity_add_product.class);
+            }
+        });
     }
 
     public void setupSpinnerTags()
     {
-        Spinner spinnerTags =findViewById(R.id.prodTag);
         ArrayAdapter<CharSequence> adapterTags=ArrayAdapter.createFromResource(this,R.array.ProductTags, android.R.layout.simple_spinner_item);
         adapterTags.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinnerTags.setAdapter(adapterTags);
