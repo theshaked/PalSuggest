@@ -1,11 +1,10 @@
 package com.example.palsuggest;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.util.Patterns;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -14,6 +13,8 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.Toast;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 public class activity_add_product extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
 
@@ -49,21 +50,73 @@ public class activity_add_product extends AppCompatActivity implements AdapterVi
             @Override
             public void onClick(View v) {
 
-                prodName.requestFocus();
-                prodName.setError("Your Error Message");
+                boolean prodNameValid=IsUserTextValid(prodName);
+                boolean prodReviewValid=IsUserTextValid(prodReview);
+                boolean prodLinkValid=IsUserLinkValid(prodLink);
+                boolean prodPriceValid=IsUserPriceValid(prodPrice);
 
-                String dataText="prodName="+prodName.getText()+"\n"+
-                        "prodReview="+prodReview.getText()+"\n"+
-                        "spinnerTags="+spinnerTags.getSelectedItem().toString()+"\n"+
-                        "prodPrice="+prodPrice.getText()+"\n"+
-                        "prodLink="+prodLink.getText()+"\n"+
-                        "imageUri="+imageUri.getPath()+"\n";
+                if (prodNameValid && prodReviewValid && prodLinkValid && prodPriceValid)
+                {
+                    String dataText = "prodName=" + prodName.getText() + "\n" +
+                            "prodReview=" + prodReview.getText() + "\n" +
+                            "spinnerTags=" + spinnerTags.getSelectedItem().toString() + "\n" +
+                            "prodPrice=" + prodPrice.getText() + "\n" +
+                            "prodLink=" + prodLink.getText() + "\n"
+                            //+ "imageUri=" + imageUri.getPath() + "\n"
+                            ;
 
                 Toast.makeText(getApplicationContext(), dataText, Toast.LENGTH_LONG).show(); //TODO: del this toast
                 //openActivity(activity_add_product.class);
             }
+            }
         });
     }
+
+    private boolean IsUserTextValid(EditText editText)
+    {
+        UserTextNotEmpty(editText);
+
+        if (!editText.getText().toString().matches(getString(R.string.atLeastOneLetter)))
+        {
+            editText.setError(editText.getHint()+" חייב להכיל לפחות אות אחת ");
+            return false;
+        }
+        return true;
+    }
+
+    private boolean UserTextNotEmpty(EditText editText)
+    {
+        if (editText.getText() == null || (editText.getText().toString().isEmpty()))
+        {
+            editText.setError("בבקשה הכנס את " + editText.getHint());
+            return false;
+        }
+        return true;
+    }
+
+    private boolean IsUserPriceValid(EditText editTextPrice)
+    {
+        UserTextNotEmpty(editTextPrice);
+
+        if (!editTextPrice.getText().toString().matches(getString(R.string.positiveNumeric)))
+        {
+            editTextPrice.setError(editTextPrice.getHint()+" חייב להכיל סכום מספרי חיובי");
+            return false;
+        }
+        return true;
+    }
+
+    private boolean IsUserLinkValid(EditText editTextLink)
+    {
+        if (UserTextNotEmpty(editTextLink) && !Patterns.WEB_URL.matcher(editTextLink.getText()).matches()) //Valid text with invalid link
+        {
+            editTextLink.setError("כתובת המוצר אינה חוקית");
+            return false;
+        }
+        return true;
+    }
+
+
 
     public void setupSpinnerTags()
     {
