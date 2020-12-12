@@ -14,19 +14,38 @@ import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.firestore.FirebaseFirestore;
+
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
 public class activity_add_product extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
 
     private static final int PICK_IMAGE = 100;
-    ImageView uploadImageView;
     Uri imageUri;
+
+    ImageView uploadImageView;
     EditText prodName;
     EditText prodReview;
     Spinner spinnerTags;
     EditText prodPrice;
     EditText prodLink;
     Button addNewProdBtn;
+
+    private static final String Key_NAME = "name";
+    private static final String Key_REVIEW = "review";
+    private static final String Key_LINK = "link";
+    private static final String Key_PRICE = "price";
+    private static final String Key_TAG = "tag";
+
+    private static FirebaseFirestore db = FirebaseFirestore.getInstance();
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,12 +62,14 @@ public class activity_add_product extends AppCompatActivity implements AdapterVi
         setupSpinnerTags();
         setupuploadImageView();
         setupAddNewProdBtn();
+
     }
 
     private void setupAddNewProdBtn() {
         addNewProdBtn.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
+            public void onClick(View v)
+            {
 
                 boolean prodNameValid=IsUserTextValid(prodName);
                 boolean prodReviewValid=IsUserTextValid(prodReview);
@@ -57,17 +78,30 @@ public class activity_add_product extends AppCompatActivity implements AdapterVi
 
                 if (prodNameValid && prodReviewValid && prodLinkValid && prodPriceValid)
                 {
-                    String dataText = "prodName=" + prodName.getText() + "\n" +
-                            "prodReview=" + prodReview.getText() + "\n" +
-                            "spinnerTags=" + spinnerTags.getSelectedItem().toString() + "\n" +
-                            "prodPrice=" + prodPrice.getText() + "\n" +
-                            "prodLink=" + prodLink.getText() + "\n"
-                            //+ "imageUri=" + imageUri.getPath() + "\n"
-                            ;
 
-                Toast.makeText(getApplicationContext(), dataText, Toast.LENGTH_LONG).show(); //TODO: del this toast
-                //openActivity(activity_add_product.class);
-            }
+                    Map<String,Object> product = new HashMap<>();
+                    product.put(Key_NAME,prodName.getText().toString());
+                    product.put(Key_REVIEW,prodReview.getText().toString());
+                    product.put(Key_TAG,spinnerTags.getSelectedItem().toString());
+                    product.put(Key_LINK,prodLink.getText().toString());
+                    product.put(Key_PRICE,prodPrice.getText().toString());
+                    //TODO:add bitmap (max size 1mb)
+
+                    db.collection("Products").document(String.valueOf(prodName.getText())).set(product)
+                            .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                @Override
+                                public void onSuccess(Void aVoid)
+                                    {
+                                        Toast.makeText(getApplicationContext(), "Thank you for entering a new suggestion!", Toast.LENGTH_LONG).show();
+                                        finish();
+                                    }})
+                            .addOnFailureListener(new OnFailureListener() {
+                                @Override
+                                public void onFailure(@NonNull Exception e)
+                                    {
+                                        Toast.makeText(getApplicationContext(), "Opposite! Something went wrong please try again later", Toast.LENGTH_LONG).show();
+                                    }});
+                }
             }
         });
     }
@@ -144,7 +178,8 @@ public class activity_add_product extends AppCompatActivity implements AdapterVi
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data){
         super.onActivityResult(requestCode, resultCode, data);
-        if (resultCode == RESULT_OK && requestCode == PICK_IMAGE){
+        if (resultCode == RESULT_OK && requestCode == PICK_IMAGE)
+        {
             imageUri = data.getData();
             uploadImageView.setImageURI(imageUri);
             uploadImageView.setBackgroundResource(R.drawable.edit_text_background);
