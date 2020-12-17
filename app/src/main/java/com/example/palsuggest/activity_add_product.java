@@ -1,6 +1,7 @@
 package com.example.palsuggest;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -21,14 +22,19 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
+
+import static com.google.firebase.firestore.Blob.fromBytes;
 
 public class activity_add_product extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
 
     private static final int PICK_IMAGE = 100;
     Uri imageUri;
+    Bitmap bitmap;
+    byte[] byteArrayImage;
 
     ImageView uploadImageView;
     EditText prodName;
@@ -43,6 +49,7 @@ public class activity_add_product extends AppCompatActivity implements AdapterVi
     private static final String Key_LINK = "link";
     private static final String Key_PRICE = "price";
     private static final String Key_TAG = "tag";
+    private static final String Key_IMAGE = "Image";
 
     private static FirebaseFirestore db = FirebaseFirestore.getInstance();
 
@@ -75,6 +82,7 @@ public class activity_add_product extends AppCompatActivity implements AdapterVi
                 boolean prodReviewValid=IsUserTextValid(prodReview);
                 boolean prodLinkValid=IsUserLinkValid(prodLink);
                 boolean prodPriceValid=IsUserPriceValid(prodPrice);
+                //TODO: ADD VAILD IMAGE TEST
 
                 if (prodNameValid && prodReviewValid && prodLinkValid && prodPriceValid)
                 {
@@ -85,7 +93,8 @@ public class activity_add_product extends AppCompatActivity implements AdapterVi
                     product.put(Key_TAG,spinnerTags.getSelectedItem().toString());
                     product.put(Key_LINK,prodLink.getText().toString());
                     product.put(Key_PRICE,prodPrice.getText().toString());
-                    //TODO:add bitmap (max size 1mb)
+                    product.put(Key_IMAGE,fromBytes(byteArrayImage)); //TODO:make sure max size 1mb
+
 
                     db.collection("Products").document(String.valueOf(prodName.getText())).set(product)
                             .addOnSuccessListener(new OnSuccessListener<Void>() {
@@ -183,6 +192,15 @@ public class activity_add_product extends AppCompatActivity implements AdapterVi
             imageUri = data.getData();
             uploadImageView.setImageURI(imageUri);
             uploadImageView.setBackgroundResource(R.drawable.edit_text_background);
+            try {
+                bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), imageUri);
+                ByteArrayOutputStream stream = new ByteArrayOutputStream();
+                bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
+                byteArrayImage = stream.toByteArray();
+            } catch (IOException e) {
+                e.printStackTrace();
+                Toast.makeText(getApplicationContext(), "Opposite! Image upload failed :C ", Toast.LENGTH_LONG).show();
+            }
         }
     }
 
