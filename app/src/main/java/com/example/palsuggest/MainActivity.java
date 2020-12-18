@@ -40,7 +40,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Toast.makeText(getApplicationContext(), "Open item was Clicked", Toast.LENGTH_LONG).show(); //TODO: del this toast
-                openActivity(ShowProductActivity.class,"Item");
+                openActivity(ShowProductActivity.class,"Test");
             }
         });
     }
