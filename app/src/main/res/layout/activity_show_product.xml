@@ -22,11 +22,10 @@
         android:id="@+id/constraintLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="30dp"
+        android:layout_margin="25dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/productNameText"
-        app:layout_constraintVertical_bias="0.508">
+        app:layout_constraintTop_toBottomOf="@+id/productNameText">
 
         <ImageView
             android:id="@+id/imageView"
@@ -69,10 +68,11 @@
             app:srcCompat="@drawable/hearticon" />
 
         <TextView
-            android:id="@+id/LikeCounterText"
+            android:id="@+id/likeCounterText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="כמות המלצות"
+            android:text="מס ממליצים"
+            app:layout_constraintEnd_toEndOf="@+id/likeButton"
             app:layout_constraintStart_toStartOf="@+id/likeButton"
             app:layout_constraintTop_toBottomOf="@+id/likeButton" />
 
@@ -80,8 +80,9 @@
             android:id="@+id/suggesterNameText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="שם המפרסם"
-            app:layout_constraintEnd_toEndOf="parent"
+            android:text="שם ממליץ"
+            app:layout_constraintEnd_toEndOf="@+id/followButton"
+            app:layout_constraintStart_toStartOf="@+id/followButton"
             app:layout_constraintTop_toBottomOf="@+id/followButton" />
 
         <TextView
@@ -107,13 +108,13 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/LikeCounterText" />
+            app:layout_constraintTop_toBottomOf="@+id/likeCounterText" />
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/DeleteButton"
+        android:id="@+id/deleteButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:clickable="true"
