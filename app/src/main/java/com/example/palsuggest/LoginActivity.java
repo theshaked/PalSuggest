@@ -21,15 +21,16 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-        setupbuttonLogin();
+        setupButtonLogin();
+        setupButtonSignup();
         editTextUsername=findViewById(R.id.editTextUsername);
         editTextPassword=findViewById(R.id.editTextPassword);
     }
 
 
-    public void setupbuttonLogin()
+    public void setupButtonLogin()
     {
-        Button buttonLogin = findViewById(R.id.buttonLogin);
+        Button buttonLogin = findViewById(R.id.btnSignup);
         buttonLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -53,6 +54,21 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
     }
+
+    public void setupButtonSignup()
+    {
+        Button buttonSignup = findViewById(R.id.buttonSignup);
+        buttonSignup.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v)
+            {
+                Toast.makeText(getApplicationContext(), "Signup was Clicked", Toast.LENGTH_LONG).show(); //TODO: del this toast
+                startActivity(new Intent(v.getContext(), Signup.class));
+
+            }
+        });
+    }
+
 
     private boolean IsUserInputValid() //user name and passward is valid
     {
