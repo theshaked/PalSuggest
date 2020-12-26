@@ -47,7 +47,7 @@ public class SignupActivity extends AppCompatActivity {
                             editTextPassword.getText().toString(),
                             editTextEmail.getText().toString());
                     singup.SingupAttempt();
-                    if (singup.LoginAttemptSuccessful)
+                    if (singup.LoginAttemptSuccessful) //TODO:FIX BUG SingupAttempt FINISHES AFTER THIS IF
                     {
                         Toast.makeText(getApplicationContext(), "Singup was Successful", Toast.LENGTH_LONG).show(); //TODO: del this toast
                     }
