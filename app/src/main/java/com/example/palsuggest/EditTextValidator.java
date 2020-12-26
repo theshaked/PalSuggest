@@ -10,7 +10,8 @@ public class EditTextValidator {
     private final static String atLeastOneLetter  = ".*[a-zA-Z]+.*";
     private final static String positiveNumeric  = "^[1-9][0-9]*$" ;
     private final static String validUsername  = "^[a-z][a-z0-9]{3,19}$"; //start with letter and length is 4-20 numbers or chars
-    private final static String validPassword  = "^(?=.*[0-9])(?=.*[a-zA-Z])([a-z0-9]{6,})$*"; //Minimum eight characters, at least one letter and one number
+    private final static String validPassword  = "^(?=.*[A-Za-z])(?=.*\\d)[A-Za-z\\d]{8,}$"; //Minimum eight characters, at least one letter and one number
+    private final static String validEmail  = "^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$"; // A valid e-mail address is a string that matches the ABNF production
 
     public static boolean IsUsernameValid(EditText editText)
     {
@@ -75,6 +76,28 @@ public class EditTextValidator {
         if (UserTextNotEmpty(editTextLink) && !Patterns.WEB_URL.matcher(editTextLink.getText()).matches()) //Valid text with invalid link
         {
             editTextLink.setError("כתובת המוצר אינה חוקית");
+            return false;
+        }
+        return true;
+    }
+
+    public static boolean IsEmailValid(EditText editTextEmail)
+    {
+        UserTextNotEmpty(editTextEmail);
+
+        if (!editTextEmail.getText().toString().matches(validEmail))
+        {
+            editTextEmail.setError(editTextEmail.getHint()+" זה אינו חוקי");
+            return false;
+        }
+        return true;
+    }
+
+    public static boolean IsConfirmPasswordValid(EditText editTextPassword1 , EditText editTextPasswordConfirm)
+    {
+        if (!editTextPassword1.getText().toString().equals(editTextPasswordConfirm.getText().toString()))
+        {
+            editTextPasswordConfirm.setError(editTextPasswordConfirm.getHint()+"  אינה זהה");
             return false;
         }
         return true;

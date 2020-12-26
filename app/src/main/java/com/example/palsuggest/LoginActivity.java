@@ -33,7 +33,7 @@ public class LoginActivity extends AppCompatActivity {
 
     public void setupButtonLogin()
     {
-        Button buttonLogin = findViewById(R.id.btnSignup);
+        Button buttonLogin = findViewById(R.id.buttonLogin);
         buttonLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -78,9 +78,9 @@ public class LoginActivity extends AppCompatActivity {
             return IsUsernameValid(editTextUsername) && IsPasswordValid(editTextPassword);
     }
 
-
-
     private void SetErrorsOnEditTexts()
     {
     }
+
+
 }

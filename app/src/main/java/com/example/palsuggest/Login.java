@@ -22,8 +22,12 @@ public class Login {
     {
         return true;
     }
+    public static boolean isUserNameExists()//TODO:DB logic
+    {
+        return true;
+    }
 
-    private boolean isUserNameExists()//TODO:DB logic
+    public static boolean isUserNameExists(String username)//TODO:DB logic
     {
         return true;
     }
