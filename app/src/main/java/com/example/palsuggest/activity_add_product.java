@@ -27,6 +27,9 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
+import static com.example.palsuggest.EditTextValidator.IsUserLinkValid;
+import static com.example.palsuggest.EditTextValidator.IsUserPriceValid;
+import static com.example.palsuggest.EditTextValidator.IsUserTextValid;
 import static com.google.firebase.firestore.Blob.fromBytes;
 
 public class activity_add_product extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
@@ -114,52 +117,6 @@ public class activity_add_product extends AppCompatActivity implements AdapterVi
             }
         });
     }
-
-    private boolean IsUserTextValid(EditText editText)
-    {
-        UserTextNotEmpty(editText);
-
-        if (!editText.getText().toString().matches(getString(R.string.atLeastOneLetter)))
-        {
-            editText.setError(editText.getHint()+" חייב להכיל לפחות אות אחת ");
-            return false;
-        }
-        return true;
-    }
-
-    private boolean UserTextNotEmpty(EditText editText)
-    {
-        if (editText.getText() == null || (editText.getText().toString().isEmpty()))
-        {
-            editText.setError("בבקשה הכנס את " + editText.getHint());
-            return false;
-        }
-        return true;
-    }
-
-    private boolean IsUserPriceValid(EditText editTextPrice)
-    {
-        UserTextNotEmpty(editTextPrice);
-
-        if (!editTextPrice.getText().toString().matches(getString(R.string.positiveNumeric)))
-        {
-            editTextPrice.setError(editTextPrice.getHint()+" חייב להכיל סכום מספרי חיובי");
-            return false;
-        }
-        return true;
-    }
-
-    private boolean IsUserLinkValid(EditText editTextLink)
-    {
-        if (UserTextNotEmpty(editTextLink) && !Patterns.WEB_URL.matcher(editTextLink.getText()).matches()) //Valid text with invalid link
-        {
-            editTextLink.setError("כתובת המוצר אינה חוקית");
-            return false;
-        }
-        return true;
-    }
-
-
 
     public void setupSpinnerTags()
     {

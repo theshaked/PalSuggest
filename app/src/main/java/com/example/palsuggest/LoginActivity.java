@@ -9,6 +9,9 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import static com.example.palsuggest.EditTextValidator.IsPasswordValid;
+import static com.example.palsuggest.EditTextValidator.IsUsernameValid;
+
 public class LoginActivity extends AppCompatActivity {
 
     Login login=new Login();
@@ -63,7 +66,7 @@ public class LoginActivity extends AppCompatActivity {
             public void onClick(View v)
             {
                 Toast.makeText(getApplicationContext(), "Signup was Clicked", Toast.LENGTH_LONG).show(); //TODO: del this toast
-                startActivity(new Intent(v.getContext(), Signup.class));
+                startActivity(new Intent(v.getContext(), SignupActivity.class));
 
             }
         });
@@ -75,39 +78,7 @@ public class LoginActivity extends AppCompatActivity {
             return IsUsernameValid(editTextUsername) && IsPasswordValid(editTextPassword);
     }
 
-    private boolean IsUsernameValid(EditText editText)
-    {
-        UserTextNotEmpty(editText);
 
-        if (!editText.getText().toString().matches(getString(R.string.validUsername)))
-        {
-            editText.setError("שם המשתמש חייב להתחיל באות לטינית ולהכיל בין 4 ל20 מספרים ואותיות לטיניות");
-            return false;
-        }
-        return true;
-    }
-
-    private boolean IsPasswordValid(EditText editText)
-    {
-        UserTextNotEmpty(editText);
-
-        if (!editText.getText().toString().matches(getString(R.string.validPassword)))
-        {
-            editText.setError("סיסמה חייבת להכיל לפחות 8 אותיות ומספרים ולפחות מספר ואות לטינית אחת");
-            return false;
-        }
-        return true;
-    }
-
-    private boolean UserTextNotEmpty(EditText editText)
-    {
-        if (editText.getText() == null || (editText.getText().toString().isEmpty()))
-        {
-            editText.setError("בבקשה הכנס את " + editText.getHint());
-            return false;
-        }
-        return true;
-    }
 
     private void SetErrorsOnEditTexts()
     {
