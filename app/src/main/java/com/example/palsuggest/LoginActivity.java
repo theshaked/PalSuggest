@@ -63,7 +63,8 @@ public class LoginActivity extends AppCompatActivity {
                             if (UserDocument.exists()){
                                 if (((String) UserDocument.get("password")).equals(login.getPassword()))
                                 {
-                                    OpenMainActivity(v);
+                                    User user=new User(UserDocument.getData());
+                                    OpenMainActivity(v,user);
                                 }
                                 else
                                 {
@@ -88,9 +89,11 @@ public class LoginActivity extends AppCompatActivity {
 
     }
 
-    private void OpenMainActivity(View v) {
+
+    private void OpenMainActivity(View v,User user) {
         Intent intentMainActivity = new Intent(v.getContext(), MainActivity.class);
-        intentMainActivity.putExtra("username", editTextUsername.getText().toString());
+        //intentMainActivity.putExtra("username", editTextUsername.getText().toString());
+        intentMainActivity.putExtra("user", String.valueOf(user)); //TODO PASS OBJ not string
         startActivity(intentMainActivity);
     }
 

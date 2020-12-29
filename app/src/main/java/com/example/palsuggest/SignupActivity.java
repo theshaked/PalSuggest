@@ -16,6 +16,7 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -38,6 +39,10 @@ public class SignupActivity extends AppCompatActivity {
     private static final String Key_USERNAME = "username";
     private static final String Key_PASSWORD = "password";
     private static final String Key_EMAIL = "email";
+    private static final String Key_LIKES = "likes";
+    private static final String Key_FRIENDS = "friends";
+    private static final String Key_ADMIN = "admin";
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -84,6 +89,9 @@ public class SignupActivity extends AppCompatActivity {
             newUser.put(Key_USERNAME,singup.getUsername());
             newUser.put(Key_PASSWORD,singup.getPassword());
             newUser.put(Key_EMAIL,singup.getEmail());
+            newUser.put(Key_LIKES, Arrays.asList());
+            newUser.put(Key_FRIENDS, Arrays.asList());
+            newUser.put(Key_ADMIN, false);
 
         db.collection("Users").document(singup.getUsername()).get()
                 .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
