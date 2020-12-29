@@ -1,7 +1,5 @@
 <resources>
     <string name="app_name">PalSuggest</string>
-    <string name="atLeastOneLetter">.*[a-zA-Z]+.*</string>
-    <string name="positiveNumeric">^[1-9][0-9]*$</string>
 
     <string-array name="ProductTags">
         <item>Desktop PC</item>
