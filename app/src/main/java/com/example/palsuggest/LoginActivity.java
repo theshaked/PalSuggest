@@ -17,6 +17,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 
 import static com.example.palsuggest.EditTextValidator.IsPasswordValid;
 import static com.example.palsuggest.EditTextValidator.IsUsernameValid;
+import static com.example.palsuggest.MainActivity.activeUser;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -92,8 +93,7 @@ public class LoginActivity extends AppCompatActivity {
 
     private void OpenMainActivity(View v,User user) {
         Intent intentMainActivity = new Intent(v.getContext(), MainActivity.class);
-        //intentMainActivity.putExtra("username", editTextUsername.getText().toString());
-        intentMainActivity.putExtra("user", String.valueOf(user)); //TODO PASS OBJ not string
+        activeUser=user;
         startActivity(intentMainActivity);
     }
 

@@ -24,12 +24,14 @@ import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
 import static com.example.palsuggest.EditTextValidator.IsUserLinkValid;
 import static com.example.palsuggest.EditTextValidator.IsUserPriceValid;
 import static com.example.palsuggest.EditTextValidator.IsUserTextValid;
+import static com.example.palsuggest.MainActivity.activeUser;
 import static com.google.firebase.firestore.Blob.fromBytes;
 
 public class activity_add_product extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
@@ -53,6 +55,8 @@ public class activity_add_product extends AppCompatActivity implements AdapterVi
     private static final String Key_PRICE = "price";
     private static final String Key_TAG = "tag";
     private static final String Key_IMAGE = "Image";
+    private static final String Key_LIKES = "likes";
+    private static final String Key_SUGGESTER = "suggester";
 
     private static FirebaseFirestore db = FirebaseFirestore.getInstance();
 
@@ -97,7 +101,8 @@ public class activity_add_product extends AppCompatActivity implements AdapterVi
                     product.put(Key_LINK,prodLink.getText().toString());
                     product.put(Key_PRICE,prodPrice.getText().toString());
                     product.put(Key_IMAGE,fromBytes(byteArrayImage)); //TODO:make sure max size 1mb
-
+                    product.put(Key_LIKES, Arrays.asList());
+                    product.put(Key_SUGGESTER, activeUser.getUsername());
 
                     db.collection("Products").document(String.valueOf(prodName.getText())).set(product)
                             .addOnSuccessListener(new OnSuccessListener<Void>() {

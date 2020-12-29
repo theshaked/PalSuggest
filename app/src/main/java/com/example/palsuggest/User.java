@@ -22,4 +22,20 @@ public class User {
         friends = (List<String>) newUser.get("friends");
         admin = (boolean) newUser.get("admin");
     }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public List<String> getLikes() {
+        return likes;
+    }
+
+    public List<String> getFriends() {
+        return friends;
+    }
+
+    public boolean isAdmin() {
+        return admin;
+    }
 }
