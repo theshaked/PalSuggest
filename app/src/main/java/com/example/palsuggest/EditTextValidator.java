@@ -9,7 +9,7 @@ public class EditTextValidator {
 
     private final static String atLeastOneLetter  = ".*[a-zA-Z]+.*";
     private final static String positiveNumeric  = "^[1-9][0-9]*$" ;
-    private final static String validUsername  = "^[a-z][a-z0-9]{3,19}$"; //start with letter and length is 4-20 numbers or chars
+    private final static String validUsername  = "^[a-zA-Z][a-zA-Z0-9]{3,19}$"; //start with letter and length is 4-20 numbers or chars
     private final static String validPassword  = "^(?=.*[A-Za-z])(?=.*\\d)[A-Za-z\\d]{8,}$"; //Minimum eight characters, at least one letter and one number
     private final static String validEmail  = "^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$"; // A valid e-mail address is a string that matches the ABNF production
 

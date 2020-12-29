@@ -7,17 +7,23 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 import static com.example.palsuggest.EditTextValidator.IsPasswordValid;
 import static com.example.palsuggest.EditTextValidator.IsUsernameValid;
 
 public class LoginActivity extends AppCompatActivity {
 
-    Login login=new Login();
-    String username;
+    Login login;
     EditText editTextUsername;
     EditText editTextPassword;
+    private static FirebaseFirestore db = FirebaseFirestore.getInstance();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,23 +45,53 @@ public class LoginActivity extends AppCompatActivity {
             public void onClick(View v) {
                 if (IsUserInputValid())
                 {
-                    login.LoginAttempt();
-                    if (login.LoginAttemptSuccessful)
-                    {
-                        Toast.makeText(getApplicationContext(), "Login was Clicked", Toast.LENGTH_LONG).show(); //TODO: del this toast
-                        Intent intentMainActivity = new Intent(v.getContext(), MainActivity.class);
-                        username=editTextUsername.getText().toString();
-                        intentMainActivity.putExtra("username", username);
-                        startActivity(intentMainActivity);
-                    }
-                    else
-                    {
-                        login.getLoginErrors();
-                        SetErrorsOnEditTexts();
-                    }
+                    login=new Login(editTextUsername.getText().toString(),editTextPassword.getText().toString());
+                    LoginAttempt(v);
                 }
             }
         });
+    }
+
+    private void LoginAttempt(View v) {
+        db.collection("Users").document(login.getUsername()).get()
+                .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                        if (task.isSuccessful())
+                        {
+                            DocumentSnapshot UserDocument = task.getResult();
+                            if (UserDocument.exists()){
+                                if (((String) UserDocument.get("password")).equals(login.getPassword()))
+                                {
+                                    OpenMainActivity(v);
+                                }
+                                else
+                                {
+                                    Toast.makeText(getApplicationContext(),
+                                            "oh..Password doesn't match username.", Toast.LENGTH_LONG).show();
+                                    return;
+                                }
+                            }
+                            else
+                            {
+                                Toast.makeText(getApplicationContext(),
+                                        "Username doesn't exist! New User? Sing Up Here!", Toast.LENGTH_LONG).show();
+                                return;
+                            }
+                        }
+                        else {
+                            Toast.makeText(getApplicationContext(),
+                                    "Opposite! Something went wrong please try again later", Toast.LENGTH_LONG).show();
+                            return;
+                        }
+                    }});
+
+    }
+
+    private void OpenMainActivity(View v) {
+        Intent intentMainActivity = new Intent(v.getContext(), MainActivity.class);
+        intentMainActivity.putExtra("username", editTextUsername.getText().toString());
+        startActivity(intentMainActivity);
     }
 
     public void setupButtonSignup()
@@ -65,22 +101,13 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onClick(View v)
             {
-                Toast.makeText(getApplicationContext(), "Signup was Clicked", Toast.LENGTH_LONG).show(); //TODO: del this toast
                 startActivity(new Intent(v.getContext(), SignupActivity.class));
-
             }
         });
     }
 
-
-    private boolean IsUserInputValid() //user name and passward is valid
+    private boolean IsUserInputValid()
     {
             return IsUsernameValid(editTextUsername) && IsPasswordValid(editTextPassword);
     }
-
-    private void SetErrorsOnEditTexts()
-    {
-    }
-
-
 }

@@ -1,13 +1,23 @@
 package com.example.palsuggest;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
+
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
+
+import java.util.HashMap;
+import java.util.Map;
 
 import static com.example.palsuggest.EditTextValidator.IsConfirmPasswordValid;
 import static com.example.palsuggest.EditTextValidator.IsEmailValid;
@@ -21,6 +31,13 @@ public class SignupActivity extends AppCompatActivity {
     EditText editTextConfirmPassword;
     EditText editTextEmail;
 
+    Singup singup;
+
+    private static FirebaseFirestore db = FirebaseFirestore.getInstance();
+
+    private static final String Key_USERNAME = "username";
+    private static final String Key_PASSWORD = "password";
+    private static final String Key_EMAIL = "email";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,19 +59,11 @@ public class SignupActivity extends AppCompatActivity {
             public void onClick(View v) {
                 if (IsUserInputValid())
                 {
-                    Singup singup=new Singup(
+                    singup=new Singup(
                             editTextUsername.getText().toString(),
                             editTextPassword.getText().toString(),
                             editTextEmail.getText().toString());
-                    singup.SingupAttempt();
-                    if (singup.LoginAttemptSuccessful) //TODO:FIX BUG SingupAttempt FINISHES AFTER THIS IF
-                    {
-                        Toast.makeText(getApplicationContext(), "Singup was Successful", Toast.LENGTH_LONG).show(); //TODO: del this toast
-                    }
-                    else
-                    {
-                        Toast.makeText(getApplicationContext(), "Failed Singup", Toast.LENGTH_LONG).show();
-                    }
+                    SingupAttempt();
                 }
             }
         });
@@ -67,5 +76,54 @@ public class SignupActivity extends AppCompatActivity {
         boolean isConfirmPasswordValid= IsConfirmPasswordValid(editTextPassword,editTextConfirmPassword);
         boolean isEmailValid=IsEmailValid(editTextEmail);
         return isUsernameValid && isPasswordValid && isConfirmPasswordValid && isEmailValid;
+    }
+
+    public void SingupAttempt()
+    {
+            Map<String,Object> newUser = new HashMap<>();
+            newUser.put(Key_USERNAME,singup.getUsername());
+            newUser.put(Key_PASSWORD,singup.getPassword());
+            newUser.put(Key_EMAIL,singup.getEmail());
+
+        db.collection("Users").document(singup.getUsername()).get()
+                .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if (task.isSuccessful())
+                {
+                    DocumentSnapshot UserDocument = task.getResult();
+                    if (UserDocument.exists())
+                    {
+                        Toast.makeText(getApplicationContext(),
+                                "Username already exists please choose another!", Toast.LENGTH_LONG).show();
+                        return;
+                    }
+                    else { RegisterNewUserToDB(newUser); }
+                }
+                else {
+                    Toast.makeText(getApplicationContext(),
+                            "Opposite! Something went wrong please try again later", Toast.LENGTH_LONG).show();
+                    return;
+                }
+            }});
+    }
+
+    private void RegisterNewUserToDB(Map<String, Object> userEntry) {
+        db.collection("Users").document(singup.getUsername()).set(userEntry)
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid)
+                    {
+                        finish();
+                        Toast.makeText(getApplicationContext(), "Thank you for signing up!", Toast.LENGTH_LONG).show();
+                    }})
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e)
+                    {
+                        Toast.makeText(getApplicationContext(),
+                                "Opposite! Something went wrong please try again later", Toast.LENGTH_LONG).show();
+                    }});
+
     }
 }

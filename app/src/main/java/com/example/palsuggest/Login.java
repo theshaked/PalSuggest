@@ -3,36 +3,20 @@ package com.example.palsuggest;
 public class Login {
 
 
-    public boolean LoginAttemptSuccessful = false;
-    public int LoginAttemptsCounter = 0;
+    private String username;
+    private String password;
 
-    public void LoginAttempt()
-    {
-        if (isUserNameExists() && isPasswordMatchUser())
-        {
-            LoginAttemptSuccessful=true;
-        }
-        else
-        {
-            LoginAttemptsCounter += 1; //TODO:Max the Attempts to 3 for a one min cooldown
-        }
+    public Login(String usernameInput, String passwordInput) {
+        username=usernameInput;
+        password=passwordInput;
     }
 
-    private boolean isPasswordMatchUser()//TODO:DB logic
-    {
-        return true;
-    }
-    public static boolean isUserNameExists()//TODO:DB logic
-    {
-        return true;
+    public String getUsername() {
+        return username;
     }
 
-    public static boolean isUserNameExists(String username)//TODO:DB logic
-    {
-        return true;
+    public String getPassword() {
+        return password;
     }
 
-    public void getLoginErrors()//TODO:set un enum status from DB
-    {
-    }
 }
