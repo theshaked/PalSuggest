@@ -3,6 +3,8 @@ package com.example.palsuggest;
 
 import android.graphics.Bitmap;
 
+import java.util.List;
+
 public class Product {
     private String name;
     private String review;
@@ -10,18 +12,18 @@ public class Product {
     private String link;
     private int price;
     private Bitmap image;
-    private int suggesterID;
-    private int []likesIDs;
+    private String suggesterName;
+    private List<String>likesNames;
 
-    public Product(String name, String review, String tag, String link, int price, Bitmap image, int suggesterID, int[] likesIDs) {
+    public Product(String name, String review, String tag, String link, int price, Bitmap image, String suggesterName, List<String> likesNames) {
         this.name = name;
         this.review = review;
         this.tag = tag;
         this.link = link;
         this.price = price;
         this.image = image;
-        this.suggesterID = suggesterID;
-        this.likesIDs = likesIDs;
+        this.suggesterName = suggesterName;
+        this.likesNames = likesNames;
     }
 
     public String getName() {
@@ -72,20 +74,20 @@ public class Product {
         this.image = image;
     }
 
-    public int getSuggesterID() {
-        return suggesterID;
+    public String getSuggesterName() {
+        return suggesterName;
     }
 
-    public void setSuggesterID(int suggesterID) {
-        this.suggesterID = suggesterID;
+    public void setSuggesterName(String suggesterName) {
+        this.suggesterName = suggesterName;
     }
 
-    public int[] getLikesIDs() {
-        return likesIDs;
+    public List<String> getLikesNames() {
+        return likesNames;
     }
 
-    public void setLikesIDs(int[] likesIDs) {
-        this.likesIDs = likesIDs;
+    public void setLikesIDs(List<String> likesNames) {
+        this.likesNames = likesNames;
     }
 
 

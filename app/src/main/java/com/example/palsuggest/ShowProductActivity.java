@@ -16,6 +16,8 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.util.List;
+
 public class ShowProductActivity extends AppCompatActivity {
 
     private static FirebaseFirestore db = FirebaseFirestore.getInstance();
@@ -113,11 +115,11 @@ public class ShowProductActivity extends AppCompatActivity {
     }
 
     private void setLikeCounterText() {
-        likeCounterText.setText(String.valueOf(product.getLikesIDs().length));
+        likeCounterText.setText(String.valueOf(product.getLikesNames().size()));
     }
 
     private void setSuggesterNameText() {
-        suggesterNameText.setText(String.valueOf(product.getSuggesterID())); //TODO:change the ID to a name of him
+        suggesterNameText.setText(product.getSuggesterName());
     }
 
     private void setTagText() {
@@ -142,8 +144,8 @@ public class ShowProductActivity extends AppCompatActivity {
         int price= Integer.parseInt((String) documentSnapshot.get("price"));
         byte[] bitmapBytes=((Blob)documentSnapshot.get("Image")).toBytes();
         Bitmap bitmap=BitmapFactory.decodeByteArray(bitmapBytes, 0, bitmapBytes.length);
-        int suggesterID = 11; //TODO: get real data
-        int [] likesIDs=new int[1]; //TODO: get real data
-        return new Product(name,review,tag,link,price,bitmap,suggesterID,likesIDs);
+        String suggesterName = (String) documentSnapshot.get("suggester"); //TODO: get real data
+        List<String> likesNames=(List<String>) documentSnapshot.get("likes");
+        return new Product(name,review,tag,link,price,bitmap,suggesterName,likesNames);
     }
 }
