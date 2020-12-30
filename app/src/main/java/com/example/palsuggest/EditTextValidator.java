@@ -7,7 +7,7 @@ import android.widget.EditText;
 
 public class EditTextValidator {
 
-    private final static String atLeastOneLetter  = ".*[a-zA-Z]+.*";
+    private final static String atLeastOneLetter  = ".*[a-zA-Z\\u0590-\\u05fe]+.*";
     private final static String positiveNumeric  = "^[1-9][0-9]*$" ;
     private final static String validUsername  = "^[a-zA-Z][a-zA-Z0-9]{3,19}$"; //start with letter and length is 4-20 numbers or chars
     private final static String validPassword  = "^(?=.*[A-Za-z])(?=.*\\d)[A-Za-z\\d]{8,}$"; //Minimum eight characters, at least one letter and one number

@@ -101,7 +101,7 @@ public class activity_add_product extends AppCompatActivity implements AdapterVi
                     product.put(Key_LINK,prodLink.getText().toString());
                     product.put(Key_PRICE,prodPrice.getText().toString());
                     product.put(Key_IMAGE,fromBytes(byteArrayImage)); //TODO:make sure max size 1mb
-                    product.put(Key_LIKES, Arrays.asList());
+                    product.put(Key_LIKES, Arrays.asList(activeUser.getUsername()));
                     product.put(Key_SUGGESTER, activeUser.getUsername());
 
                     db.collection("Products").document(String.valueOf(prodName.getText())).set(product)
@@ -154,15 +154,7 @@ public class activity_add_product extends AppCompatActivity implements AdapterVi
             imageUri = data.getData();
             uploadImageView.setImageURI(imageUri);
             uploadImageView.setBackgroundResource(R.drawable.edit_text_background);
-            try {
-                bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), imageUri);
-                ByteArrayOutputStream stream = new ByteArrayOutputStream();
-                bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
-                byteArrayImage = stream.toByteArray();
-            } catch (IOException e) {
-                e.printStackTrace();
-                Toast.makeText(getApplicationContext(), "Opposite! Image upload failed :C ", Toast.LENGTH_LONG).show();
-            }
+            GetImageNormalisdeSize();
         }
     }
 
@@ -175,4 +167,23 @@ public class activity_add_product extends AppCompatActivity implements AdapterVi
     public void onNothingSelected(AdapterView<?> parent) {
 
     }
+
+    public void GetImageNormalisdeSize() {
+        try {
+            bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), imageUri);
+            int imageQualityPercent=100;
+            do
+            {
+                ByteArrayOutputStream stream = new ByteArrayOutputStream();
+                bitmap.compress(Bitmap.CompressFormat.JPEG, imageQualityPercent, stream);
+                byteArrayImage = stream.toByteArray();
+                imageQualityPercent -= Math.sqrt(imageQualityPercent);
+            } while(byteArrayImage.length > 1000000);
+        } catch (IOException e) {
+            e.printStackTrace();
+            Toast.makeText(getApplicationContext(), "Opposite! Image upload failed :C ", Toast.LENGTH_LONG).show();
+        }
+    }
+
+
 }
