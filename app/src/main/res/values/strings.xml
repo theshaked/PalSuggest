@@ -11,5 +11,7 @@
         <item>Headset/Headphone</item>
         <item>Microphone</item>
         <item>Speaker</item>
+        <item>Smartphone</item>
+        <item>Smartwatch</item>
     </string-array>
 </resources>

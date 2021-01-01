@@ -10,8 +10,9 @@ public class User {
     private final String username;
     private final String password;
     private final String email;
-    private final List<String> likes;
-    private final List<String> friends;
+    private List<String> likes;
+
+    private List<String> friends;
     private final boolean admin;
 
     public User(Map<String, Object> newUser) {
@@ -37,5 +38,13 @@ public class User {
 
     public boolean isAdmin() {
         return admin;
+    }
+
+    public void AddFriend(String suggesterName) {
+        friends.add(suggesterName);
+    }
+
+    public void RemoveFriend(String suggesterName) {
+        friends.remove(suggesterName);
     }
 }

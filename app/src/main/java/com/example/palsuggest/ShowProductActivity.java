@@ -2,9 +2,11 @@ package com.example.palsuggest;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.res.ColorStateList;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -14,9 +16,12 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.firestore.Blob;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.List;
+
+import static com.example.palsuggest.MainActivity.activeUser;
 
 public class ShowProductActivity extends AppCompatActivity {
 
@@ -47,8 +52,6 @@ public class ShowProductActivity extends AppCompatActivity {
             @Override
             public void onSuccess(DocumentSnapshot documentSnapshot) {
                 product=GetProductFromDB(documentSnapshot);
-                Toast.makeText(getApplicationContext(), "yay", Toast.LENGTH_LONG).show(); //TODO: del this toast
-
                 findAllViewsById();
                 UpdateActivityWithProductData();
             }
@@ -56,7 +59,7 @@ public class ShowProductActivity extends AppCompatActivity {
         docRef.get().addOnFailureListener(command ->
         {
             Toast.makeText(getApplicationContext(), "Opposite! Something went wrong please try again later", Toast.LENGTH_LONG).show();
-            finish();
+            finish(); //TODO:Go to MAINACTIVITY and not LOGIN
         });
     }
 
@@ -103,9 +106,57 @@ public class ShowProductActivity extends AppCompatActivity {
     }
 
     private void setFollowButton() {
-        //TODO:Disable this button if we are admin user or the prod Suggester
-        //TODO:Add the suggester to the follow arr of this user
-        //TODO:change the image acroding to the follow state
+        if (product.getSuggesterName().equals(activeUser.getUsername()))
+        {
+            followButton.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.DarkGray)));
+        }
+        else
+        {
+            if (activeUser.getFriends().contains(product.getSuggesterName()))
+                followButton.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.LimeGreen)));
+            else
+                followButton.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.FloralWhite)));
+
+            followButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (activeUser.getFriends().contains(product.getSuggesterName()))
+                    {
+                        RemoveFriend(product.getSuggesterName());
+                    }
+                    else
+                    {
+                        AddFriend(product.getSuggesterName());
+                    }
+                }
+            });
+        }
+    }
+
+    private void AddFriend(String suggesterName) {
+
+        db.collection("Users").document(activeUser.getUsername()).update("friends", FieldValue.arrayUnion(suggesterName))
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid)
+                    {
+                        Toast.makeText(getApplicationContext(), "friend added!", Toast.LENGTH_LONG).show(); //TODO:DEL?
+                        activeUser.AddFriend(suggesterName);
+                        followButton.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.LimeGreen)));
+                    }});
+    }
+
+    private void RemoveFriend(String suggesterName) {
+
+        db.collection("Users").document(activeUser.getUsername()).update("friends", FieldValue.arrayRemove(suggesterName))
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid)
+                    {
+                        Toast.makeText(getApplicationContext(), "friend removed", Toast.LENGTH_LONG).show(); //TODO:DEL?
+                        activeUser.RemoveFriend(suggesterName);
+                        followButton.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.FloralWhite)));
+                    }});
     }
 
     private void setLikeButton() {
