@@ -100,7 +100,6 @@ public class ShowProductActivity extends AppCompatActivity {
 
     private void setImageView() {
         imageView.setImageBitmap(product.getImage());
-        //TODO: setup link on image
         imageView.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 Intent openURL = new Intent(android.content.Intent.ACTION_VIEW);
@@ -172,7 +171,7 @@ public class ShowProductActivity extends AppCompatActivity {
 
     private void setLikeButton()
     {
-        if (product.getSuggesterName().equals(activeUser.getUsername()) || activeUser.isAdmin()) //TODO:Disable this button if we are admin user or the prod Suggester
+        if (product.getSuggesterName().equals(activeUser.getUsername()) || activeUser.isAdmin())
         {
             likeButton.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.DarkGray)));
         }
@@ -264,7 +263,7 @@ public class ShowProductActivity extends AppCompatActivity {
     }
 
     private void setDeleteButton() {
-        if (product.getSuggesterName().equals(activeUser.getUsername()) || activeUser.isAdmin())//TODO:if user is admin or the prod Suggester enable this button
+        if (product.getSuggesterName().equals(activeUser.getUsername()) || activeUser.isAdmin())
         {
             deleteButton.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -304,7 +303,7 @@ public class ShowProductActivity extends AppCompatActivity {
         int price= Integer.parseInt((String) documentSnapshot.get("price"));
         byte[] bitmapBytes=((Blob)documentSnapshot.get("Image")).toBytes();
         Bitmap bitmap=BitmapFactory.decodeByteArray(bitmapBytes, 0, bitmapBytes.length);
-        String suggesterName = (String) documentSnapshot.get("suggester"); //TODO: get real data
+        String suggesterName = (String) documentSnapshot.get("suggester");
         List<String> likesNames=(List<String>) documentSnapshot.get("likes");
         return new Product(name,review,tag,link,price,bitmap,suggesterName,likesNames);
     }
