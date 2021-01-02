@@ -51,11 +51,11 @@ public class MainActivity extends AppCompatActivity {
         startActivity(new Intent(this,activityClass));
     }
 
-    private void openActivity(Class activityClass,String ItemNameOrId)
+    private void openActivity(Class activityClass,String productName)
     {
         Intent mIntent = new Intent(this,activityClass);
         Bundle mBundle = new Bundle();
-        mBundle.putString("keyOrName", ItemNameOrId);
+        mBundle.putString("productName", productName);
         mIntent.putExtras(mBundle);
         startActivity(mIntent);
     }

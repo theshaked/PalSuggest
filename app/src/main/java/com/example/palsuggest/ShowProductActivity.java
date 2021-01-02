@@ -2,9 +2,11 @@ package com.example.palsuggest;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.content.res.ColorStateList;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
@@ -44,10 +46,10 @@ public class ShowProductActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_show_product);
 
-        String NameOrId=getIntent().getExtras().getString("keyOrName");
+        String productName=getIntent().getExtras().getString("productName");
 
 
-        DocumentReference docRef = db.collection("Products").document(NameOrId);
+        DocumentReference docRef = db.collection("Products").document(productName);
         docRef.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
             @Override
             public void onSuccess(DocumentSnapshot documentSnapshot) {
@@ -99,14 +101,23 @@ public class ShowProductActivity extends AppCompatActivity {
     private void setImageView() {
         imageView.setImageBitmap(product.getImage());
         //TODO: setup link on image
+        imageView.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                Intent openURL = new Intent(android.content.Intent.ACTION_VIEW);
+                Uri productUrl = product.getLink().startsWith("http://")?Uri.parse(product.getLink()):Uri.parse("http://"+product.getLink());
+                openURL.setData(productUrl);
+                startActivity(openURL);
+            }
+        });
     }
 
     private void setPriceText() {
         priceText.setText(String.valueOf(product.getPrice())+'₪');
     }
 
-    private void setFollowButton() {
-        if (product.getSuggesterName().equals(activeUser.getUsername()))
+    private void setFollowButton()
+    {
+        if (product.getSuggesterName().equals(activeUser.getUsername()) || activeUser.isAdmin())
         {
             followButton.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.DarkGray)));
         }
@@ -159,10 +170,81 @@ public class ShowProductActivity extends AppCompatActivity {
                     }});
     }
 
-    private void setLikeButton() {
-        //TODO:Disable this button if we are admin user or the prod Suggester
-        //TODO:add user id to the prod like arr if clicked
-        //TODO:change the image acroding to the follow state (highlight)
+    private void setLikeButton()
+    {
+        if (product.getSuggesterName().equals(activeUser.getUsername()) || activeUser.isAdmin()) //TODO:Disable this button if we are admin user or the prod Suggester
+        {
+            likeButton.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.DarkGray)));
+        }
+        else
+        {
+            if (product.getLikesNames().contains(activeUser.getUsername()))
+                likeButton.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.LimeGreen)));
+            else
+                likeButton.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.FloralWhite)));
+
+            likeButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (product.getLikesNames().contains(activeUser.getUsername()))
+                    {
+                        RemoveProductLike(product.getName());
+                    }
+                    else
+                    {
+                        AddProductLike(product.getName());
+                    }
+                }
+            });
+        }
+
+
+
+    }
+
+    private void AddProductLike(String productName) {
+        db.collection("Users").document(activeUser.getUsername()).update("likes", FieldValue.arrayUnion(productName))
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid)
+                    {
+                        db.collection("Products").document(productName).update("likes", FieldValue.arrayUnion(activeUser.getUsername()))
+                                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                    @Override
+                                    public void onSuccess(Void aVoid)
+                                    {
+                                        Toast.makeText(getApplicationContext(), "Like added!", Toast.LENGTH_LONG).show(); //TODO:DEL?
+                                        activeUser.AddLike(productName);
+                                        product.AddLike(activeUser.getUsername());
+                                        likeButton.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.LimeGreen)));
+                                        setLikeCounterText();
+                                    }
+                                });
+
+                    }});
+    }
+
+
+    private void RemoveProductLike(String productName) {
+        db.collection("Users").document(activeUser.getUsername()).update("likes", FieldValue.arrayRemove(productName))
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid)
+                    {
+                        db.collection("Products").document(productName).update("likes", FieldValue.arrayRemove(activeUser.getUsername()))
+                                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                    @Override
+                                    public void onSuccess(Void aVoid)
+                                    {
+                                        Toast.makeText(getApplicationContext(), "Like removed", Toast.LENGTH_LONG).show(); //TODO:DEL?
+                                        activeUser.RemoveLike(productName);
+                                        product.RemoveLike(activeUser.getUsername());
+                                        likeButton.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.FloralWhite)));
+                                        setLikeCounterText();
+                                    }
+                                });
+
+                    }});
     }
 
     private void setLikeCounterText() {
@@ -182,7 +264,34 @@ public class ShowProductActivity extends AppCompatActivity {
     }
 
     private void setDeleteButton() {
-        //TODO:if user is admin or the prod Suggester enable this button
+        if (product.getSuggesterName().equals(activeUser.getUsername()) || activeUser.isAdmin())//TODO:if user is admin or the prod Suggester enable this button
+        {
+            deleteButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                        //TODO: ASK are you sure you want to del? yes no
+                        RemoveProduct(product.getName());
+                }
+            });
+        }
+        else
+        {
+            deleteButton.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.DarkGray)));
+        }
+    }
+
+    private void RemoveProduct(String productName) {
+
+        db.collection("Products").document(productName).delete()
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid)
+                    {
+                        Toast.makeText(getApplicationContext(), "Product removed", Toast.LENGTH_LONG).show(); //TODO:DEL?
+                        finish();
+                    }
+                });
+
     }
 
 

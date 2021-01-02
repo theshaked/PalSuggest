@@ -100,8 +100,8 @@ public class activity_add_product extends AppCompatActivity implements AdapterVi
                     product.put(Key_TAG,spinnerTags.getSelectedItem().toString());
                     product.put(Key_LINK,prodLink.getText().toString());
                     product.put(Key_PRICE,prodPrice.getText().toString());
-                    product.put(Key_IMAGE,fromBytes(byteArrayImage)); //TODO:make sure max size 1mb
-                    product.put(Key_LIKES, Arrays.asList(activeUser.getUsername()));
+                    product.put(Key_IMAGE,fromBytes(byteArrayImage));
+                    product.put(Key_LIKES, Arrays.asList());
                     product.put(Key_SUGGESTER, activeUser.getUsername());
 
                     db.collection("Products").document(String.valueOf(prodName.getText())).set(product)

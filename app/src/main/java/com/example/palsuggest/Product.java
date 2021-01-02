@@ -86,8 +86,11 @@ public class Product {
         return likesNames;
     }
 
-    public void setLikesIDs(List<String> likesNames) {
-        this.likesNames = likesNames;
+    public void AddLike(String username) {
+        likesNames.add(username);
+    }
+    public void RemoveLike(String username) {
+        likesNames.remove(username);
     }
 
 

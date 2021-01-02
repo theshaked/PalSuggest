@@ -11,7 +11,6 @@ public class User {
     private final String password;
     private final String email;
     private List<String> likes;
-
     private List<String> friends;
     private final boolean admin;
 
@@ -47,4 +46,14 @@ public class User {
     public void RemoveFriend(String suggesterName) {
         friends.remove(suggesterName);
     }
+
+    public void AddLike(String productName) {
+        likes.add(productName);
+    }
+
+    public void RemoveLike(String productName) {
+        likes.remove(productName);
+    }
+
+
 }
