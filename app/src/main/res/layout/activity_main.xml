@@ -24,6 +24,7 @@
         app:layout_constraintTop_toTopOf="@+id/searchView">
 
         <Button
+            android:id="@+id/communityBtn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:drawableTop="@drawable/community"
