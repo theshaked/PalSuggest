@@ -19,6 +19,7 @@ import java.util.List;
 public class ProductsBrowserActivity extends AppCompatActivity {
 
     private static FirebaseFirestore db = FirebaseFirestore.getInstance();
+    RecyclerView recyclerView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,7 +36,9 @@ public class ProductsBrowserActivity extends AppCompatActivity {
             @Override
             public void onSuccess(DocumentSnapshot documentSnapshot) {
                 Product [] products = new Product[]{
-                        GetProductFromDB(documentSnapshot)
+                        GetProductFromDB(documentSnapshot),
+                        GetProductFromDB(documentSnapshot),
+                        GetProductFromDB(documentSnapshot),
                 };
 
                 ProductAdapter productAdapter = new ProductAdapter(products,ProductsBrowserActivity.this);

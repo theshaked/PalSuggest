@@ -15,14 +15,12 @@ import androidx.recyclerview.widget.RecyclerView;
 public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ViewHolder>{
 
     Product[] productsData;
-
-    public ProductAdapter(Product[] myMovieData, ProductsBrowserActivity activity) {
-        this.productsData = myMovieData;
-        this.context = activity;
-    }
-
     Context context;
 
+    public ProductAdapter(Product[] products, ProductsBrowserActivity activity) {
+        this.productsData = products;
+        this.context = activity;
+    }
 
     @NonNull
     @Override
@@ -52,7 +50,7 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ViewHold
 
     @Override
     public int getItemCount() {
-        return 0;
+        return productsData.length;
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder
