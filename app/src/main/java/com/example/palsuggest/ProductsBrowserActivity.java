@@ -1,19 +1,28 @@
 package com.example.palsuggest;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.util.Log;
+import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.Blob;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class ProductsBrowserActivity extends AppCompatActivity {
@@ -31,20 +40,39 @@ public class ProductsBrowserActivity extends AppCompatActivity {
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
 
-        DocumentReference docRef = db.collection("Products").document("Dulux");
-        docRef.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-            @Override
-            public void onSuccess(DocumentSnapshot documentSnapshot) {
-                Product [] products = new Product[]{
-                        GetProductFromDB(documentSnapshot),
-                        GetProductFromDB(documentSnapshot),
-                        GetProductFromDB(documentSnapshot),
-                };
+//        DocumentReference docRef = db.collection("Products").document("Dulux");
+//        docRef.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+//            @Override
+//            public void onSuccess(DocumentSnapshot documentSnapshot) {
+//                Product [] products = new Product[]{
+//                        GetProductFromDB(documentSnapshot),
+//                        GetProductFromDB(documentSnapshot),
+//                        GetProductFromDB(documentSnapshot),
+//                };
+//
+//                ProductAdapter productAdapter = new ProductAdapter(products,ProductsBrowserActivity.this);
+//                recyclerView.setAdapter(productAdapter);
+//            }
+//        });
 
-                ProductAdapter productAdapter = new ProductAdapter(products,ProductsBrowserActivity.this);
-                recyclerView.setAdapter(productAdapter);
-            }
-        });
+        db.collection("Products")
+                .whereEqualTo("tag", "Headset/Headphone")
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            List<Product> products=new ArrayList<Product>();
+                            for (QueryDocumentSnapshot document : task.getResult()) {
+                                products.add(GetProductFromDB((DocumentSnapshot) document));
+                            }
+                            ProductAdapter productAdapter = new ProductAdapter(products,ProductsBrowserActivity.this);
+                            recyclerView.setAdapter(productAdapter);
+                        } else {
+                            Toast.makeText(getApplicationContext(), "loading failed :C", Toast.LENGTH_LONG).show(); //TODO: del this toast
+                        }
+                    }
+                });
 
 
     }
@@ -63,4 +91,6 @@ public class ProductsBrowserActivity extends AppCompatActivity {
         List<String> likesNames=(List<String>) documentSnapshot.get("likes");
         return new Product(name,review,tag,link,price,bitmap,suggesterName,likesNames);
     }
+
+
 }

@@ -11,13 +11,15 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.util.List;
+
 
 public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ViewHolder>{
 
-    Product[] productsData;
+    List<Product> productsData;
     Context context;
 
-    public ProductAdapter(Product[] products, ProductsBrowserActivity activity) {
+    public ProductAdapter(List<Product> products, ProductsBrowserActivity activity) {
         this.productsData = products;
         this.context = activity;
     }
@@ -33,7 +35,7 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ViewHold
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        final Product productsList = productsData[position];
+        final Product productsList = productsData.get(position);
         holder.itemImage.setImageBitmap(productsList.getImage());
         holder.itemName.setText(productsList.getName());
         holder.itemPrice.setText(productsList.getPrice()+" ₪ ");
@@ -50,7 +52,7 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ViewHold
 
     @Override
     public int getItemCount() {
-        return productsData.length;
+        return productsData.size();
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder
