@@ -39,22 +39,6 @@ public class ProductsBrowserActivity extends AppCompatActivity {
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-
-//        DocumentReference docRef = db.collection("Products").document("Dulux");
-//        docRef.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-//            @Override
-//            public void onSuccess(DocumentSnapshot documentSnapshot) {
-//                Product [] products = new Product[]{
-//                        GetProductFromDB(documentSnapshot),
-//                        GetProductFromDB(documentSnapshot),
-//                        GetProductFromDB(documentSnapshot),
-//                };
-//
-//                ProductAdapter productAdapter = new ProductAdapter(products,ProductsBrowserActivity.this);
-//                recyclerView.setAdapter(productAdapter);
-//            }
-//        });
-
         db.collection("Products")
                 .whereEqualTo("tag", "Headset/Headphone")
                 .get()
@@ -66,6 +50,7 @@ public class ProductsBrowserActivity extends AppCompatActivity {
                             for (QueryDocumentSnapshot document : task.getResult()) {
                                 products.add(GetProductFromDB((DocumentSnapshot) document));
                             }
+                            products.sort((o1, o2) -> o2.getLikesNames().size() - o1.getLikesNames().size());
                             ProductAdapter productAdapter = new ProductAdapter(products,ProductsBrowserActivity.this);
                             recyclerView.setAdapter(productAdapter);
                         } else {

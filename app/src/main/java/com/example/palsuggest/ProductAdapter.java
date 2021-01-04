@@ -1,6 +1,9 @@
 package com.example.palsuggest;
 
 import android.content.Context;
+import android.content.Intent;
+import android.graphics.Bitmap;
+import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -36,7 +39,8 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ViewHold
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         final Product productsList = productsData.get(position);
-        holder.itemImage.setImageBitmap(productsList.getImage());
+        //holder.itemImage.setImageBitmap(productsList.getImage());
+        holder.itemImage.setImageBitmap( Bitmap.createScaledBitmap(productsList.getImage(), 100, 100, false));
         holder.itemName.setText(productsList.getName());
         holder.itemPrice.setText(productsList.getPrice()+" ₪ ");
         holder.itemLikes.setText(productsList.getLikesNames().size()+" ♥ ");
@@ -46,8 +50,18 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ViewHold
             public void onClick(View v) {
                 Toast.makeText(context,productsList.getName()+" was clicked!",Toast.LENGTH_SHORT).show();
                 //TODO: Open ShowProductActivity of this product
+                openActivity(ShowProductActivity.class,productsList.getName());
             }
         });
+    }
+
+    private void openActivity(Class activityClass,String productName)
+    {
+        Intent mIntent = new Intent(context,activityClass);
+        Bundle mBundle = new Bundle();
+        mBundle.putString("productName", productName);
+        mIntent.putExtras(mBundle);
+        context.startActivity(mIntent);
     }
 
     @Override
