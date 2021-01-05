@@ -152,9 +152,9 @@ public class activity_add_product extends AppCompatActivity implements AdapterVi
         if (resultCode == RESULT_OK && requestCode == PICK_IMAGE)
         {
             imageUri = data.getData();
-            uploadImageView.setImageURI(imageUri);
-            uploadImageView.setBackgroundResource(R.drawable.edit_text_background);
             GetImageNormalisdeSize();
+            uploadImageView.setImageBitmap(bitmap);
+            uploadImageView.setBackgroundResource(R.drawable.edit_text_background);
         }
     }
 
@@ -171,6 +171,7 @@ public class activity_add_product extends AppCompatActivity implements AdapterVi
     public void GetImageNormalisdeSize() {
         try {
             bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), imageUri);
+            bitmap = CropImageSquare(bitmap);
             int imageQualityPercent=100;
             do
             {
@@ -183,6 +184,32 @@ public class activity_add_product extends AppCompatActivity implements AdapterVi
             e.printStackTrace();
             Toast.makeText(getApplicationContext(), "Opposite! Image upload failed :C ", Toast.LENGTH_LONG).show();
         }
+    }
+
+    private Bitmap CropImageSquare(Bitmap srcBmp) {
+
+        Bitmap dstBmp;
+        if (srcBmp.getWidth() >= srcBmp.getHeight()){
+
+            dstBmp = Bitmap.createBitmap(
+                    srcBmp,
+                    srcBmp.getWidth()/2 - srcBmp.getHeight()/2,
+                    0,
+                    srcBmp.getHeight(),
+                    srcBmp.getHeight()
+            );
+
+        }else{
+
+            dstBmp = Bitmap.createBitmap(
+                    srcBmp,
+                    0,
+                    srcBmp.getHeight()/2 - srcBmp.getWidth()/2,
+                    srcBmp.getWidth(),
+                    srcBmp.getWidth()
+            );
+        }
+        return dstBmp;
     }
 
 
