@@ -18,6 +18,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".activity_add_product" />
+        <activity android:name=".ShowProductActivity"></activity>
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
