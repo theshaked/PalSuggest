@@ -22,6 +22,8 @@ public class MainActivity extends AppCompatActivity {
         setupFloatingActBtnAddProd();
         setupFloatingActBtnShowItem(); //TODO: DEL THIS btn
         setupCommunityBtn();
+        setupFriendsBtn();
+        setupYouBtn();
     }
 
     private void setupCommunityBtn()
@@ -31,7 +33,31 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Toast.makeText(getApplicationContext(), "communityBtn was Clicked", Toast.LENGTH_LONG).show(); //TODO: del this toast
-                openActivity(ProductsBrowserActivity.class);
+                openActivity(ProductsBrowserActivity.class,"COMMUNITY","filterSuggester");
+            }
+        });
+    }
+
+    private void setupFriendsBtn()
+    {
+        Button friendsBtn = findViewById(R.id.friendsBtn);
+        friendsBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(getApplicationContext(), "friendsBtn was Clicked", Toast.LENGTH_LONG).show(); //TODO: del this toast
+                openActivity(ProductsBrowserActivity.class,"FRIENDS","filterSuggester");
+            }
+        });
+    }
+
+    private void setupYouBtn()
+    {
+        Button youBtn = findViewById(R.id.youBtn);
+        youBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(getApplicationContext(), "youBtn was Clicked", Toast.LENGTH_LONG).show(); //TODO: del this toast
+                openActivity(ProductsBrowserActivity.class,"MY","filterSuggester");
             }
         });
     }
@@ -55,7 +81,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Toast.makeText(getApplicationContext(), "Open item was Clicked", Toast.LENGTH_LONG).show(); //TODO: del this toast
-                openActivity(ShowProductActivity.class,"Test");
+                openActivity(ShowProductActivity.class,"Test","productName");
             }
         });
     }
@@ -65,12 +91,13 @@ public class MainActivity extends AppCompatActivity {
         startActivity(new Intent(this,activityClass));
     }
 
-    private void openActivity(Class activityClass,String productName)
+    private void openActivity(Class activityClass,String Filter ,String filterName)
     {
         Intent mIntent = new Intent(this,activityClass);
         Bundle mBundle = new Bundle();
-        mBundle.putString("productName", productName);
+        mBundle.putString(filterName, Filter);
         mIntent.putExtras(mBundle);
         startActivity(mIntent);
     }
+
 }

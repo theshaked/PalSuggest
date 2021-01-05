@@ -19,11 +19,15 @@ import com.google.firebase.firestore.Blob;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+
+import static com.example.palsuggest.MainActivity.activeUser;
 
 public class ProductsBrowserActivity extends AppCompatActivity {
 
@@ -35,20 +39,34 @@ public class ProductsBrowserActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_products_browser);
 
+        String filterSuggester=getIntent().getExtras().getString("filterSuggester");
+
         RecyclerView recyclerView=findViewById(R.id.recyclerView);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
+
         db.collection("Products")
-                .whereEqualTo("tag", "Headset/Headphone")
-                .get()
-                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                //.whereEqualTo("tag", "Headset/Headphone") //TODO: get tag from getExtra
+                .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
                         if (task.isSuccessful()) {
                             List<Product> products=new ArrayList<Product>();
                             for (QueryDocumentSnapshot document : task.getResult()) {
                                 products.add(GetProductFromDB((DocumentSnapshot) document));
+                            }
+                            if (filterSuggester.equals("FRIENDS"))
+                            {
+                                products.removeIf(product ->
+                                        !activeUser.getFriends().contains(product.getSuggesterName()) && //any products not by your friends
+                                        Collections.disjoint(product.getLikesNames(), activeUser.getFriends())); //any products without friends likes
+                            }
+                            else if (filterSuggester.equals("MY"))
+                            {
+                                products.removeIf(product ->
+                                         !product.getSuggesterName().equals(activeUser.getUsername()) && //product that active user isn't the suggester
+                                         !activeUser.getLikes().contains(product.getName())); //product that active user didn't like
                             }
                             products.sort((o1, o2) -> o2.getLikesNames().size() - o1.getLikesNames().size());
                             ProductAdapter productAdapter = new ProductAdapter(products,ProductsBrowserActivity.this);

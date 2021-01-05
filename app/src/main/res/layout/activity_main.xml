@@ -33,6 +33,7 @@
             android:textColor="#fff" />
 
         <Button
+            android:id="@+id/friendsBtn"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:drawableTop="@drawable/friends"
@@ -41,6 +42,7 @@
             android:textColor="#fff" />
 
         <Button
+            android:id="@+id/youBtn"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:drawableTop="@drawable/you"
