@@ -43,7 +43,6 @@ public class MainActivity extends AppCompatActivity {
         communityBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(getApplicationContext(), "communityBtn was Clicked", Toast.LENGTH_LONG).show(); //TODO: del this toast
                 openActivity(ProductsBrowserActivity.class,"COMMUNITY","filterSuggester");
             }
         });
@@ -55,7 +54,6 @@ public class MainActivity extends AppCompatActivity {
         friendsBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(getApplicationContext(), "friendsBtn was Clicked", Toast.LENGTH_LONG).show(); //TODO: del this toast
                 openActivity(ProductsBrowserActivity.class,"FRIENDS","filterSuggester");
             }
         });
@@ -67,7 +65,6 @@ public class MainActivity extends AppCompatActivity {
         youBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(getApplicationContext(), "youBtn was Clicked", Toast.LENGTH_LONG).show(); //TODO: del this toast
                 openActivity(ProductsBrowserActivity.class,"MY","filterSuggester");
             }
         });
@@ -79,7 +76,6 @@ public class MainActivity extends AppCompatActivity {
         floatingActBtnAddProd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(getApplicationContext(), "+ was Clicked", Toast.LENGTH_LONG).show(); //TODO: del this toast
                 openActivity(activity_add_product.class);
             }
         });

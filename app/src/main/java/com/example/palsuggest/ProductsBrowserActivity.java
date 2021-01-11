@@ -48,7 +48,7 @@ public class ProductsBrowserActivity extends AppCompatActivity {
 
 
         db.collection("Products")
-                .whereEqualTo("tag", filterTag) //TODO: get tag from getExtra
+                .whereEqualTo("tag", filterTag)
                 .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
@@ -73,7 +73,7 @@ public class ProductsBrowserActivity extends AppCompatActivity {
                             ProductAdapter productAdapter = new ProductAdapter(products,ProductsBrowserActivity.this);
                             recyclerView.setAdapter(productAdapter);
                         } else {
-                            Toast.makeText(getApplicationContext(), "loading failed :C", Toast.LENGTH_LONG).show(); //TODO: del this toast
+                            Toast.makeText(getApplicationContext(), "loading failed :C , try again later", Toast.LENGTH_LONG).show();
                         }
                     }
                 });

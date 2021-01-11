@@ -49,7 +49,6 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ViewHold
             @Override
             public void onClick(View v) {
                 Toast.makeText(context,productsList.getName()+" was clicked!",Toast.LENGTH_SHORT).show();
-                //TODO: Open ShowProductActivity of this product
                 openActivity(ShowProductActivity.class,productsList.getName());
             }
         });
