@@ -2,11 +2,13 @@ package com.example.palsuggest;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -14,16 +16,25 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 public class MainActivity extends AppCompatActivity {
 
     public static User activeUser;
+    Spinner spinnerTagsFilter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         setupFloatingActBtnAddProd();
-        setupFloatingActBtnShowItem(); //TODO: DEL THIS btn
         setupCommunityBtn();
         setupFriendsBtn();
         setupYouBtn();
+        setupSpinnerTagsFliter();
+    }
+
+    public void setupSpinnerTagsFliter()
+    {
+        spinnerTagsFilter =findViewById(R.id.prodTagsFilter);
+        ArrayAdapter<CharSequence> adapterTagsFliter=ArrayAdapter.createFromResource(this,R.array.ProductTags, android.R.layout.simple_spinner_item);
+        adapterTagsFliter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinnerTagsFilter.setAdapter(adapterTagsFliter);
     }
 
     private void setupCommunityBtn()
@@ -74,18 +85,6 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    public void setupFloatingActBtnShowItem()
-    {
-        FloatingActionButton floatingActBtnAddProd = findViewById(R.id.showItemFloatingActionButton);
-        floatingActBtnAddProd.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Toast.makeText(getApplicationContext(), "Open item was Clicked", Toast.LENGTH_LONG).show(); //TODO: del this toast
-                openActivity(ShowProductActivity.class,"Test","productName");
-            }
-        });
-    }
-
     private void openActivity(Class activityClass)
     {
         startActivity(new Intent(this,activityClass));
@@ -96,6 +95,7 @@ public class MainActivity extends AppCompatActivity {
         Intent mIntent = new Intent(this,activityClass);
         Bundle mBundle = new Bundle();
         mBundle.putString(filterName, Filter);
+        mBundle.putString("tagFilter",spinnerTagsFilter.getSelectedItem().toString());
         mIntent.putExtras(mBundle);
         startActivity(mIntent);
     }

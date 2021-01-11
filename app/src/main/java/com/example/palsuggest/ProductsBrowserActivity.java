@@ -40,6 +40,7 @@ public class ProductsBrowserActivity extends AppCompatActivity {
         setContentView(R.layout.activity_products_browser);
 
         String filterSuggester=getIntent().getExtras().getString("filterSuggester");
+        String filterTag=getIntent().getExtras().getString("tagFilter");
 
         RecyclerView recyclerView=findViewById(R.id.recyclerView);
         recyclerView.setHasFixedSize(true);
@@ -47,7 +48,7 @@ public class ProductsBrowserActivity extends AppCompatActivity {
 
 
         db.collection("Products")
-                //.whereEqualTo("tag", "Headset/Headphone") //TODO: get tag from getExtra
+                .whereEqualTo("tag", filterTag) //TODO: get tag from getExtra
                 .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
