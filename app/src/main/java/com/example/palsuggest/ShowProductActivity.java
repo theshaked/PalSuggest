@@ -91,7 +91,6 @@ public class ShowProductActivity extends AppCompatActivity {
         setTagText();
         setReviewText();
         setDeleteButton();
-        //TODO:(we can add un edit button if we want to).
     }
 
     private void setProductNameText() {
@@ -150,7 +149,7 @@ public class ShowProductActivity extends AppCompatActivity {
                     @Override
                     public void onSuccess(Void aVoid)
                     {
-                        Toast.makeText(getApplicationContext(), "friend added!", Toast.LENGTH_LONG).show(); //TODO:DEL?
+                        Toast.makeText(getApplicationContext(), "friend added!", Toast.LENGTH_LONG).show();
                         activeUser.AddFriend(suggesterName);
                         followButton.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.LimeGreen)));
                     }});
@@ -163,7 +162,7 @@ public class ShowProductActivity extends AppCompatActivity {
                     @Override
                     public void onSuccess(Void aVoid)
                     {
-                        Toast.makeText(getApplicationContext(), "friend removed", Toast.LENGTH_LONG).show(); //TODO:DEL?
+                        Toast.makeText(getApplicationContext(), "friend removed", Toast.LENGTH_LONG).show();
                         activeUser.RemoveFriend(suggesterName);
                         followButton.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.FloralWhite)));
                     }});
@@ -212,7 +211,6 @@ public class ShowProductActivity extends AppCompatActivity {
                                     @Override
                                     public void onSuccess(Void aVoid)
                                     {
-                                        Toast.makeText(getApplicationContext(), "Like added!", Toast.LENGTH_LONG).show(); //TODO:DEL?
                                         activeUser.AddLike(productName);
                                         product.AddLike(activeUser.getUsername());
                                         likeButton.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.LimeGreen)));
@@ -235,7 +233,6 @@ public class ShowProductActivity extends AppCompatActivity {
                                     @Override
                                     public void onSuccess(Void aVoid)
                                     {
-                                        Toast.makeText(getApplicationContext(), "Like removed", Toast.LENGTH_LONG).show(); //TODO:DEL?
                                         activeUser.RemoveLike(productName);
                                         product.RemoveLike(activeUser.getUsername());
                                         likeButton.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.FloralWhite)));

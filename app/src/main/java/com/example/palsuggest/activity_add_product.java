@@ -40,6 +40,7 @@ public class activity_add_product extends AppCompatActivity implements AdapterVi
     Uri imageUri;
     Bitmap bitmap;
     byte[] byteArrayImage;
+    boolean ImageValid=false;
 
     ImageView uploadImageView;
     EditText prodName;
@@ -48,6 +49,7 @@ public class activity_add_product extends AppCompatActivity implements AdapterVi
     EditText prodPrice;
     EditText prodLink;
     Button addNewProdBtn;
+
 
     private static final String Key_NAME = "name";
     private static final String Key_REVIEW = "review";
@@ -85,15 +87,16 @@ public class activity_add_product extends AppCompatActivity implements AdapterVi
             public void onClick(View v)
             {
 
-                boolean prodNameValid=IsUserTextValid(prodName);
-                boolean prodReviewValid=IsUserTextValid(prodReview);
-                boolean prodLinkValid=IsUserLinkValid(prodLink);
-                boolean prodPriceValid=IsUserPriceValid(prodPrice);
-                //TODO: ADD VAILD IMAGE TEST
+                boolean prodNameValid = IsUserTextValid(prodName);
+                boolean prodReviewValid = IsUserTextValid(prodReview);
+                boolean prodLinkValid = IsUserLinkValid(prodLink);
+                boolean prodPriceValid = IsUserPriceValid(prodPrice);
+                if (!ImageValid){
+                uploadImageView.setBackgroundResource(android.R.drawable.ic_dialog_alert);
+                }
 
-                if (prodNameValid && prodReviewValid && prodLinkValid && prodPriceValid)
+                if (prodNameValid && prodReviewValid && prodLinkValid && prodPriceValid && ImageValid)
                 {
-
                     Map<String,Object> product = new HashMap<>();
                     product.put(Key_NAME,prodName.getText().toString());
                     product.put(Key_REVIEW,prodReview.getText().toString());
@@ -152,9 +155,11 @@ public class activity_add_product extends AppCompatActivity implements AdapterVi
         if (resultCode == RESULT_OK && requestCode == PICK_IMAGE)
         {
             imageUri = data.getData();
-            uploadImageView.setImageURI(imageUri);
-            uploadImageView.setBackgroundResource(R.drawable.edit_text_background);
             GetImageNormalisdeSize();
+            if (ImageValid){
+                uploadImageView.setImageBitmap(bitmap);
+                uploadImageView.setBackgroundResource(R.drawable.edit_text_background);
+            }
         }
     }
 
@@ -171,6 +176,7 @@ public class activity_add_product extends AppCompatActivity implements AdapterVi
     public void GetImageNormalisdeSize() {
         try {
             bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), imageUri);
+            bitmap = CropImageSquare(bitmap);
             int imageQualityPercent=100;
             do
             {
@@ -181,8 +187,36 @@ public class activity_add_product extends AppCompatActivity implements AdapterVi
             } while(byteArrayImage.length > 1000000);
         } catch (IOException e) {
             e.printStackTrace();
+            ImageValid=false;
             Toast.makeText(getApplicationContext(), "Opposite! Image upload failed :C ", Toast.LENGTH_LONG).show();
         }
+        ImageValid=true;
+    }
+
+    private Bitmap CropImageSquare(Bitmap srcBmp) {
+
+        Bitmap dstBmp;
+        if (srcBmp.getWidth() >= srcBmp.getHeight()){
+
+            dstBmp = Bitmap.createBitmap(
+                    srcBmp,
+                    srcBmp.getWidth()/2 - srcBmp.getHeight()/2,
+                    0,
+                    srcBmp.getHeight(),
+                    srcBmp.getHeight()
+            );
+
+        }else{
+
+            dstBmp = Bitmap.createBitmap(
+                    srcBmp,
+                    0,
+                    srcBmp.getHeight()/2 - srcBmp.getWidth()/2,
+                    srcBmp.getWidth(),
+                    srcBmp.getWidth()
+            );
+        }
+        return dstBmp;
     }
 
 
